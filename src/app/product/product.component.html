@@ -1,0 +1,67 @@
+<div class="container">
+  <h1>Angular Practice Cart</h1>
+  <form (ngSubmit)="onSubmit()" #newItemForm="ngForm">
+    <div class="form-group">
+      <label for="">產品名稱</label>
+      <input type="text" class="form-control" name="name" id="name" [(ngModel)]="model.name" #name="ngModel" required>
+    </div>
+    <div class="form-group">
+      <label for="">購買數量</label>
+      <input type="number" class="form-control" name="amount" id="amount" [(ngModel)]="model.amount" required>
+    </div>
+    <div class="form-group">
+      <label for="">價格</label>
+      <input type="number" class="form-control" name="price" id="price" [(ngModel)]="model.price" required>
+    </div>
+    <button type="submit" class="btn btn-success" [disabled]="!newItemForm.form.valid">加入購物車</button>
+  </form>
+  <hr>
+  <h2>購物車清單</h2>
+  <button class="btn btn-primary" (click)="resetCart()">清空購物車</button>
+  <button class="btn btn-primary" (click)="recover()" [disabled]="historyProd.length < 1?true :false">復原變更</button>
+  <table class="table">
+    <thead>
+      <tr>
+        <td>#</td>
+        <td>產品名稱</td>
+        <td>產品價格</td>
+        <td>購買數量</td>
+        <td>小計</td>
+        <td>刪除</td>
+      </tr>
+    </thead>
+    <tbody *ngFor="let p of products; index as i;">
+      <tr>
+        <td>{{i+1}}</td>
+        <td>{{p.name}}</td>
+        <td>{{p.price}}</td>
+        <td>
+          <!-- <p [hidden]="!p.ed" (click)="edAllow(i)">{{p.amount}}</p> -->
+          <input  class="editInput" #edNum type="number" [value]="p.amount" (click) = "edNum.readOnly = false" readOnly>
+          <button [hidden]="edNum.readOnly" class="btn-info" (click)="edItem(i,edNum.value);edNum.readOnly = !edNum.readOnly">O</button>
+          <button [hidden]="edNum.readOnly" class="btn-warning" (click)="edNum.readOnly = true">X</button>
+        </td>
+        <td>{{p.price*p.amount}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="rmItem(i)">Delete</button>
+        </td>
+
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <p>稅金(5%) : </p>
+          <p>總計金額 : </p>
+        </td>
+        <td>
+          <p>{{sumOfProd()*0.05}}</p>
+          <p>{{sumOfProd()*1.05}}</p>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
